@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "interchangeable",
+  "version": "${version}",
+  "name": "Interchangeable",
+  "description": "",
+  "authors": [
+    "Kluzzio"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/interchangeable/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "timefall.interchangeable.client.InterchangeableClient"
+    ],
+    "main": [
+      "timefall.interchangeable.Interchangeable"
+    ]
+  },
+  "mixins": [
+    "interchangeable.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.9",
+    "fabric": "*",
+    "minecraft": "1.19.2"
+  }
+}
