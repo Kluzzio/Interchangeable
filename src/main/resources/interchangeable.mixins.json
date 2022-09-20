@@ -1,9 +1,11 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "timefall.interchangeable.mixin",
+  "package": "timefall.interchangeable.mixins",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "ShapedRecipeMixin",
+    "ShapelessRecipeMixin"
   ],
   "client": [
   ],
