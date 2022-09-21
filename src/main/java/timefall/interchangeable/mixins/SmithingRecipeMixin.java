@@ -2,9 +2,12 @@ package timefall.interchangeable.mixins;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.SmithingRecipe;
 import net.minecraft.util.registry.Registry;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import timefall.interchangeable.config.ConfigManager;
@@ -15,17 +18,15 @@ import java.util.Map;
 
 @Mixin(SmithingRecipe.class)
 public class SmithingRecipeMixin {
+    @Shadow @Final Ingredient base;
+    @Shadow @Final Ingredient addition;
 
-   /* @ModifyArg(method = "matches", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/Ingredient;test(Lnet/minecraft/item/ItemStack;)Z", ordinal = 0))
+    @ModifyArg(method = "matches", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/Ingredient;test(Lnet/minecraft/item/ItemStack;)Z", ordinal = 0))
     private ItemStack aaa(ItemStack inputItemStack) {
         if ((Object) this instanceof SmithingRecipe smithingRecipe) {
             HashMap<Item, Integer> INGREDIENT_ITEMS = new HashMap<>();
-            smithingRecipe.getIngredients().forEach(ingredient ->
-                    Arrays.stream(ingredient.getMatchingStacks()).toList().forEach(itemStack ->
-                            INGREDIENT_ITEMS.put(itemStack.getItem(),
-                                    INGREDIENT_ITEMS.getOrDefault(itemStack.getItem(), 0) + 1)
-                    )
-            );
+            Arrays.stream(this.base.getMatchingStacks()).toList().forEach(itemStack -> INGREDIENT_ITEMS.put(itemStack.getItem(),
+                    INGREDIENT_ITEMS.getOrDefault(itemStack.getItem(), 0) + 1));
 
             for (Item validIngredientItem : INGREDIENT_ITEMS.keySet()) {
                 for (String[] array : ConfigManager.CONFIG_FILE.getEquivalenceClasses()) {
@@ -55,12 +56,8 @@ public class SmithingRecipeMixin {
     private ItemStack bbb(ItemStack inputItemStack) {
         if ((Object) this instanceof SmithingRecipe smithingRecipe) {
             HashMap<Item, Integer> INGREDIENT_ITEMS = new HashMap<>();
-            smithingRecipe.getIngredients().forEach(ingredient ->
-                    Arrays.stream(ingredient.getMatchingStacks()).toList().forEach(itemStack ->
-                            INGREDIENT_ITEMS.put(itemStack.getItem(),
-                                    INGREDIENT_ITEMS.getOrDefault(itemStack.getItem(), 0) + 1)
-                    )
-            );
+            Arrays.stream(this.addition.getMatchingStacks()).toList().forEach(itemStack -> INGREDIENT_ITEMS.put(itemStack.getItem(),
+                    INGREDIENT_ITEMS.getOrDefault(itemStack.getItem(), 0) + 1));
 
             for (Item validIngredientItem : INGREDIENT_ITEMS.keySet()) {
                 for (String[] array : ConfigManager.CONFIG_FILE.getEquivalenceClasses()) {
@@ -90,12 +87,8 @@ public class SmithingRecipeMixin {
     private ItemStack ccc(ItemStack inputItemStack) {
         if ((Object) this instanceof SmithingRecipe smithingRecipe) {
             HashMap<Item, Integer> INGREDIENT_ITEMS = new HashMap<>();
-            smithingRecipe.getIngredients().forEach(ingredient ->
-                    Arrays.stream(ingredient.getMatchingStacks()).toList().forEach(itemStack ->
-                            INGREDIENT_ITEMS.put(itemStack.getItem(),
-                                    INGREDIENT_ITEMS.getOrDefault(itemStack.getItem(), 0) + 1)
-                    )
-            );
+            Arrays.stream(this.addition.getMatchingStacks()).toList().forEach(itemStack -> INGREDIENT_ITEMS.put(itemStack.getItem(),
+                    INGREDIENT_ITEMS.getOrDefault(itemStack.getItem(), 0) + 1));
 
             for (Item validIngredientItem : INGREDIENT_ITEMS.keySet()) {
                 for (String[] array : ConfigManager.CONFIG_FILE.getEquivalenceClasses()) {
@@ -123,5 +116,5 @@ public class SmithingRecipeMixin {
 
     private static boolean doesArrayContainItem(String[] array, Item item) {
         return Arrays.stream(array).toList().contains(Registry.ITEM.getId(item).toString());
-    }*/
+    }
 }
