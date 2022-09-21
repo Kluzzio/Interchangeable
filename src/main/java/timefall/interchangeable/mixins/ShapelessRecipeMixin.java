@@ -7,6 +7,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.recipe.ShapelessRecipe;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import timefall.interchangeable.config.ConfigManager;
 
 import java.util.*;
 
@@ -41,19 +43,21 @@ public class ShapelessRecipeMixin {
                     )
             );
 
-
             // Check that the normal ingredient is interchangeable
-            for (Item item : itemCollection) {
-                //if interchangeable
-                //look in config for the item to be interchangeable
-                String[] arr = new String[0]; // get from config
-                if (Arrays.asList(arr).contains(stack.getItem().toString())) {
-                }
-                // Check that the given ingredient is interchangeable with normal ingredient
-                // return normal ingredient
-                if (SHAPELESS_INGREDIENTS.getOrDefault(item, 0) < INGREDIENT_ITEMS.getOrDefault(item, 0)) {
-                    SHAPELESS_INGREDIENTS.put(item, SHAPELESS_INGREDIENTS.getOrDefault(item, 0) + 1);
-                    return new ItemStack(item, stack.getCount());
+            for (String[] array : ConfigManager.CONFIG_FILE.getEquivalenceClasses()) {
+                // Check that the normal ingredient is interchangeable
+                for (Item item : itemCollection) {
+                    if (Arrays.stream(array).toList().contains(Registry.ITEM.getId(item).toString())) {
+                        // Check that the given ingredient is interchangeable with normal ingredient
+                        if (Arrays.stream(array).toList().contains(Registry.ITEM.getId(stack.getItem()).toString())) {
+                            // Check that the given ingredient is interchangeable with normal ingredient
+                            // return normal ingredient
+                            if (SHAPELESS_INGREDIENTS.getOrDefault(item, 0) < INGREDIENT_ITEMS.getOrDefault(item, 0)) {
+                                SHAPELESS_INGREDIENTS.put(item, SHAPELESS_INGREDIENTS.getOrDefault(item, 0) + 1);
+                                return new ItemStack(item, stack.getCount());
+                            }
+                        }
+                    }
                 }
             }
         }
