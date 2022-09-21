@@ -12,9 +12,6 @@
   "icon": "assets/interchangeable/icon.png",
   "environment": "*",
   "entrypoints": {
-    "client": [
-      "timefall.interchangeable.client.InterchangeableClient"
-    ],
     "main": [
       "timefall.interchangeable.Interchangeable"
     ]

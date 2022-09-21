@@ -7,8 +7,6 @@
     "ShapedRecipeMixin",
     "ShapelessRecipeMixin"
   ],
-  "client": [
-  ],
   "injectors": {
     "defaultRequire": 1
   }
