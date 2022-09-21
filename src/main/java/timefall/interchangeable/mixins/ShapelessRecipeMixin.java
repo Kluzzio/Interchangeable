@@ -26,7 +26,7 @@ public class ShapelessRecipeMixin {
 
     @ModifyArg(method = "matches(Lnet/minecraft/inventory/CraftingInventory;Lnet/minecraft/world/World;)Z", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/recipe/RecipeMatcher;addInput(Lnet/minecraft/item/ItemStack;I)V"))
-    private ItemStack breakMoreShit(ItemStack stack) {
+    private ItemStack breakMoreShit(ItemStack inputItemStack) {
         if ((Object) this instanceof ShapelessRecipe shapelessRecipe) {
             Collection<Item> itemCollection = new ArrayList<>(List.of());
             shapelessRecipe.getIngredients().forEach(ingredient ->
@@ -49,19 +49,49 @@ public class ShapelessRecipeMixin {
                 for (Item item : itemCollection) {
                     if (Arrays.stream(array).toList().contains(Registry.ITEM.getId(item).toString())) {
                         // Check that the given ingredient is interchangeable with normal ingredient
-                        if (Arrays.stream(array).toList().contains(Registry.ITEM.getId(stack.getItem()).toString())) {
+                        if (Arrays.stream(array).toList().contains(Registry.ITEM.getId(inputItemStack.getItem()).toString())) {
                             // Check that the given ingredient is interchangeable with normal ingredient
                             // return normal ingredient
                             if (SHAPELESS_INGREDIENTS.getOrDefault(item, 0) < INGREDIENT_ITEMS.getOrDefault(item, 0)) {
                                 SHAPELESS_INGREDIENTS.put(item, SHAPELESS_INGREDIENTS.getOrDefault(item, 0) + 1);
-                                return new ItemStack(item, stack.getCount());
+                                return new ItemStack(item, inputItemStack.getCount());
+                            }
+                        }
+                    }
+                }
+            }
+            for (String key : ConfigManager.CONFIG_FILE.getSubstitutions().keySet()) {
+                // Check that the normal ingredient is interchangeable
+                for (Item validIngredientItem : itemCollection) {
+                    if (key.equals(Registry.ITEM.getId(validIngredientItem).toString())) {
+                        if (Arrays.stream(ConfigManager.CONFIG_FILE.getSubstitutions().get(key)).toList().contains(Registry.ITEM.getId(inputItemStack.getItem()).toString())) {
+                            if (SHAPELESS_INGREDIENTS.getOrDefault(validIngredientItem, 0) < INGREDIENT_ITEMS.getOrDefault(validIngredientItem, 0)) {
+                                SHAPELESS_INGREDIENTS.put(validIngredientItem, SHAPELESS_INGREDIENTS.getOrDefault(validIngredientItem, 0) + 1);
+                                return new ItemStack(validIngredientItem, inputItemStack.getCount());
+                            }
+                        }
+                    }
+                }
+            }
+            for (String key : ConfigManager.CONFIG_FILE.getRecipeSpecificEquivalenceClasses().keySet()) {
+                // Check that the normal ingredient is interchangeable
+                for (Item validIngredientItem : itemCollection) {
+                    if (key.equals(shapelessRecipe.getId().toString())) {
+                        if (Arrays.stream(ConfigManager.CONFIG_FILE.getRecipeSpecificEquivalenceClasses().get(key)).toList().contains(Registry.ITEM.getId(validIngredientItem).toString())) {
+                            // Check that the given ingredient is interchangeable with normal ingredient
+                            if (Arrays.stream(ConfigManager.CONFIG_FILE.getRecipeSpecificEquivalenceClasses().get(key)).toList().contains(Registry.ITEM.getId(inputItemStack.getItem()).toString())) {
+                                // return normal ingredient
+                                if (SHAPELESS_INGREDIENTS.getOrDefault(validIngredientItem, 0) < INGREDIENT_ITEMS.getOrDefault(validIngredientItem, 0)) {
+                                    SHAPELESS_INGREDIENTS.put(validIngredientItem, SHAPELESS_INGREDIENTS.getOrDefault(validIngredientItem, 0) + 1);
+                                    return new ItemStack(validIngredientItem, inputItemStack.getCount());
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        return stack;
+        return inputItemStack;
     }
 
     @Inject(method = "matches(Lnet/minecraft/inventory/CraftingInventory;Lnet/minecraft/world/World;)Z", at = @At("RETURN"))

@@ -78,9 +78,14 @@ public class ConfigManager {
     public static String getConfigFileText(String configToCreate) {
         return """
                 {
-                  "EquivalenceClasses": {
-                    [],
+                  "EquivalenceClasses": [
                     []
+                  ],
+                  "Substitutions": {
+                    "": []
+                  },
+                  "RecipeSpecificEquivalenceClasses": {
+                    "": []
                   }
                 }
                 """;
@@ -90,6 +95,10 @@ public class ConfigManager {
         CONFIG_FILE = new Gson().fromJson(configReader, ConfigurationObject.class);
         if (CONFIG_FILE.getEquivalenceClasses() == null) {
             Interchangeable.LOGGER.error(Interchangeable.MOD_NAME_LOG_ID + " EquivalenceClasses does not exist or is malformed in the configuration file: " + configFile.getName());
+        } else if (CONFIG_FILE.getSubstitutions() == null) {
+            Interchangeable.LOGGER.error(Interchangeable.MOD_NAME_LOG_ID + " Substitutions does not exist or is malformed in the configuration file: " + configFile.getName());
+        } else if (CONFIG_FILE.getRecipeSpecificEquivalenceClasses() == null) {
+            Interchangeable.LOGGER.error(Interchangeable.MOD_NAME_LOG_ID + " RecipeSpecificEquivalenceClasses does not exist or is malformed in the configuration file: " + configFile.getName());
         } else {
             SUCCESSFULLY_LOADED_CONFIG = true;
         }

@@ -58,6 +58,30 @@ public class ShapedRecipeMixin {
                         }
                     }
                 }
+                for (String key : ConfigManager.CONFIG_FILE.getSubstitutions().keySet()) {
+                    // Check that the normal ingredient is interchangeable
+                    for (Item validIngredientItem : itemCollection) {
+                        if (key.equals(Registry.ITEM.getId(validIngredientItem).toString())) {
+                            if (Arrays.stream(ConfigManager.CONFIG_FILE.getSubstitutions().get(key)).toList().contains(Registry.ITEM.getId(inputItemStack.getItem()).toString())) {
+                                return new ItemStack(validIngredientItem, inputItemStack.getCount());
+                            }
+                        }
+                    }
+                }
+                for (String key : ConfigManager.CONFIG_FILE.getRecipeSpecificEquivalenceClasses().keySet()) {
+                    // Check that the normal ingredient is interchangeable
+                    for (Item validIngredientItem : itemCollection) {
+                        if (key.equals(shapedRecipe.getId().toString())) {
+                            if (Arrays.stream(ConfigManager.CONFIG_FILE.getRecipeSpecificEquivalenceClasses().get(key)).toList().contains(Registry.ITEM.getId(validIngredientItem).toString())) {
+                                // Check that the given ingredient is interchangeable with normal ingredient
+                                if (Arrays.stream(ConfigManager.CONFIG_FILE.getRecipeSpecificEquivalenceClasses().get(key)).toList().contains(Registry.ITEM.getId(inputItemStack.getItem()).toString())) {
+                                    // return normal ingredient
+                                    return new ItemStack(validIngredientItem, inputItemStack.getCount());
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
         return inputItemStack;
