@@ -1,25 +1,19 @@
 package timefall.interchangeable.config;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSyntaxException;
-import net.fabricmc.loader.api.FabricLoader;
+import com.google.gson.*;
 import timefall.interchangeable.Interchangeable;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Scanner;
 
 public class ConfigManager {
-    public static final Path FABRIC_CONFIG_DIR = FabricLoader.getInstance().getConfigDir();
     public static ConfigurationObject CONFIG_FILE;
     public static boolean SUCCESSFULLY_LOADED_CONFIG;
 
     public static void interpretConfigFile() {
-        String configInQuestion = "interchangeable.json";
+        String configInQuestion = "config/interchangeable.json";
         //Make config if it doesn't exist
         createConfigFile(configInQuestion);
         //Read config and store into appropriate configuration object
@@ -28,7 +22,7 @@ public class ConfigManager {
 
     public static void createConfigFile(String configToCreate) {
         // Create the file in memory
-        File configFile = FABRIC_CONFIG_DIR.resolve(configToCreate).toFile();
+        File configFile = new File(configToCreate);
         // If it doesn't exist in disk
         if (!configFile.exists()) {
             //noinspection ResultOfMethodCallIgnored
@@ -51,7 +45,7 @@ public class ConfigManager {
 
     public static void readConfigFile(String configToRead) {
         // Create the variable to contain the config file in memory
-        File configFile = FABRIC_CONFIG_DIR.resolve(configToRead).toFile();
+        File configFile = new File(configToRead);
         if (configFile.exists()) {
             // Create the Gson instance
             try {

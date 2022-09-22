@@ -25,6 +25,8 @@ public class ShapelessRecipeMixin {
     @ModifyArg(method = "matches(Lnet/minecraft/inventory/CraftingInventory;Lnet/minecraft/world/World;)Z", at = @At(value = "INVOKE",
             target = "Lnet/minecraft/recipe/RecipeMatcher;addInput(Lnet/minecraft/item/ItemStack;I)V"))
     private ItemStack interchangeShapelessIngredients(ItemStack inputItemStack) {
+        if (!ConfigManager.SUCCESSFULLY_LOADED_CONFIG)
+            return inputItemStack;
         if ((Object) this instanceof ShapelessRecipe shapelessRecipe) {
             HashMap<Item, Integer> INGREDIENT_ITEMS = new HashMap<>();
             shapelessRecipe.getIngredients().forEach(ingredient ->

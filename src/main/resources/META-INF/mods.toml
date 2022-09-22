@@ -1,0 +1,27 @@
+modLoader = "javafml"
+loaderVersion = "[41,)"
+issueTrackerURL = "https://github.com/Kluzzio/Interchangeable/issues"
+license = "MIT"
+
+[[mods]]
+modId = "interchangeable"
+version = "${version}"
+displayName = "Interchangeable"
+authors = "Kluzzio"
+description = '''
+Make items interchangeable in recipes
+'''
+
+[[dependencies.interchangeable]]
+    modId = "forge"
+    mandatory = true
+    versionRange = "[41,)"
+    ordering = "NONE"
+    side = "SERVER"
+
+[[dependencies.interchangeable]]
+    modId = "minecraft"
+    mandatory = true
+    versionRange = "[1.16.5,)"
+    ordering = "NONE"
+    side = "SERVER"

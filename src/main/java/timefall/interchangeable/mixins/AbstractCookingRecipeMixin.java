@@ -18,6 +18,8 @@ public class AbstractCookingRecipeMixin {
 
     @ModifyArg(method = "matches", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/Ingredient;test(Lnet/minecraft/item/ItemStack;)Z"))
     private ItemStack aVoid(ItemStack inputItemStack) {
+        if (!ConfigManager.SUCCESSFULLY_LOADED_CONFIG)
+            return inputItemStack;
         if ((Object) this instanceof AbstractCookingRecipe abstractCookingRecipe) {
             HashMap<Item, Integer> INGREDIENT_ITEMS = new HashMap<>();
             abstractCookingRecipe.getIngredients().forEach(ingredient ->

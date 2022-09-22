@@ -29,30 +29,30 @@ public class ShapedRecipeMixin {
 
     @ModifyArg(method = "matchesPattern", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/Ingredient;test(Lnet/minecraft/item/ItemStack;)Z"))
     private ItemStack interchangeShapedIngredients(ItemStack inputItemStack) {
-        if (ConfigManager.SUCCESSFULLY_LOADED_CONFIG) {
-            if ((Object) this instanceof ShapedRecipe shapedRecipe) {
-                Collection<Item> itemCollection = new ArrayList<>(List.of());
-                Arrays.stream(recipeIngredient.getMatchingStacks()).toList().forEach(itemStack -> itemCollection.add(itemStack.getItem()));
+        if (!ConfigManager.SUCCESSFULLY_LOADED_CONFIG)
+            return inputItemStack;
+        if ((Object) this instanceof ShapedRecipe shapedRecipe) {
+            Collection<Item> itemCollection = new ArrayList<>(List.of());
+            Arrays.stream(recipeIngredient.getMatchingStacks()).toList().forEach(itemStack -> itemCollection.add(itemStack.getItem()));
 
-                for (Item validIngredientItem : itemCollection) {
-                    for (String[] array : ConfigManager.CONFIG_FILE.getEquivalenceClasses()) {
-                        if (doesArrayContainItem(array, validIngredientItem))
-                            if (doesArrayContainItem(array, inputItemStack.getItem()))
-                                return new ItemStack(validIngredientItem, inputItemStack.getCount());
-                    }
-                    Map<String, String[]> substitutions = ConfigManager.CONFIG_FILE.getSubstitutions();
-                    String itemKey = Registry.ITEM.getId(validIngredientItem).toString();
-                    if (substitutions.containsKey(itemKey)) {
-                        if (doesArrayContainItem(substitutions.get(itemKey), inputItemStack.getItem()))
+            for (Item validIngredientItem : itemCollection) {
+                for (String[] array : ConfigManager.CONFIG_FILE.getEquivalenceClasses()) {
+                    if (doesArrayContainItem(array, validIngredientItem))
+                        if (doesArrayContainItem(array, inputItemStack.getItem()))
                             return new ItemStack(validIngredientItem, inputItemStack.getCount());
-                    }
-                    Map<String, String[]> recipeSpecific = ConfigManager.CONFIG_FILE.getRecipeSpecificEquivalenceClasses();
-                    String recipeKey = shapedRecipe.getId().toString();
-                    if (recipeSpecific.containsKey(recipeKey)) {
-                        if (doesArrayContainItem(recipeSpecific.get(recipeKey), validIngredientItem))
-                            if (doesArrayContainItem(recipeSpecific.get(recipeKey), inputItemStack.getItem()))
-                                return new ItemStack(validIngredientItem, inputItemStack.getCount());
-                    }
+                }
+                Map<String, String[]> substitutions = ConfigManager.CONFIG_FILE.getSubstitutions();
+                String itemKey = Registry.ITEM.getId(validIngredientItem).toString();
+                if (substitutions.containsKey(itemKey)) {
+                    if (doesArrayContainItem(substitutions.get(itemKey), inputItemStack.getItem()))
+                        return new ItemStack(validIngredientItem, inputItemStack.getCount());
+                }
+                Map<String, String[]> recipeSpecific = ConfigManager.CONFIG_FILE.getRecipeSpecificEquivalenceClasses();
+                String recipeKey = shapedRecipe.getId().toString();
+                if (recipeSpecific.containsKey(recipeKey)) {
+                    if (doesArrayContainItem(recipeSpecific.get(recipeKey), validIngredientItem))
+                        if (doesArrayContainItem(recipeSpecific.get(recipeKey), inputItemStack.getItem()))
+                            return new ItemStack(validIngredientItem, inputItemStack.getCount());
                 }
             }
         }

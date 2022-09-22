@@ -22,7 +22,9 @@ public class SmithingRecipeMixin {
     @Shadow @Final Ingredient addition;
 
     @ModifyArg(method = "matches", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/Ingredient;test(Lnet/minecraft/item/ItemStack;)Z", ordinal = 0))
-    private ItemStack aaa(ItemStack inputItemStack) {
+    private ItemStack baseSlotInterchangeability(ItemStack inputItemStack) {
+        if (!ConfigManager.SUCCESSFULLY_LOADED_CONFIG)
+            return inputItemStack;
         if ((Object) this instanceof SmithingRecipe smithingRecipe) {
             HashMap<Item, Integer> INGREDIENT_ITEMS = new HashMap<>();
             Arrays.stream(this.base.getMatchingStacks()).toList().forEach(itemStack -> INGREDIENT_ITEMS.put(itemStack.getItem(),
@@ -53,7 +55,9 @@ public class SmithingRecipeMixin {
     }
 
     @ModifyArg(method = "matches", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/Ingredient;test(Lnet/minecraft/item/ItemStack;)Z", ordinal = 1))
-    private ItemStack bbb(ItemStack inputItemStack) {
+    private ItemStack additionSlotInterchangeability(ItemStack inputItemStack) {
+        if (!ConfigManager.SUCCESSFULLY_LOADED_CONFIG)
+            return inputItemStack;
         if ((Object) this instanceof SmithingRecipe smithingRecipe) {
             HashMap<Item, Integer> INGREDIENT_ITEMS = new HashMap<>();
             Arrays.stream(this.addition.getMatchingStacks()).toList().forEach(itemStack -> INGREDIENT_ITEMS.put(itemStack.getItem(),
@@ -84,7 +88,9 @@ public class SmithingRecipeMixin {
     }
 
     @ModifyArg(method = "testAddition", at = @At(value = "INVOKE", target = "Lnet/minecraft/recipe/Ingredient;test(Lnet/minecraft/item/ItemStack;)Z"))
-    private ItemStack ccc(ItemStack inputItemStack) {
+    private ItemStack testAdditionInterchangability(ItemStack inputItemStack) {
+        if (!ConfigManager.SUCCESSFULLY_LOADED_CONFIG)
+            return inputItemStack;
         if ((Object) this instanceof SmithingRecipe smithingRecipe) {
             HashMap<Item, Integer> INGREDIENT_ITEMS = new HashMap<>();
             Arrays.stream(this.addition.getMatchingStacks()).toList().forEach(itemStack -> INGREDIENT_ITEMS.put(itemStack.getItem(),
