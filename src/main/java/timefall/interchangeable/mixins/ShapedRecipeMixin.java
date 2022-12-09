@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.ShapedRecipe;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -42,7 +42,7 @@ public class ShapedRecipeMixin {
                             return new ItemStack(validIngredientItem, inputItemStack.getCount());
                 }
                 Map<String, String[]> substitutions = ConfigManager.CONFIG_FILE.getSubstitutions();
-                String itemKey = Registry.ITEM.getId(validIngredientItem).toString();
+                String itemKey = Registries.ITEM.getId(validIngredientItem).toString();
                 if (substitutions.containsKey(itemKey)) {
                     if (doesArrayContainItem(substitutions.get(itemKey), inputItemStack.getItem()))
                         return new ItemStack(validIngredientItem, inputItemStack.getCount());
@@ -60,6 +60,6 @@ public class ShapedRecipeMixin {
     }
 
     private static boolean doesArrayContainItem(String[] array, Item item) {
-        return Arrays.stream(array).toList().contains(Registry.ITEM.getId(item).toString());
+        return Arrays.stream(array).toList().contains(Registries.ITEM.getId(item).toString());
     }
 }

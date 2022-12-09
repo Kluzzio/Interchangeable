@@ -4,7 +4,7 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.ShapelessRecipe;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -44,7 +44,7 @@ public class ShapelessRecipeMixin {
                                 return makeUseOfIngredientAndDocument(validIngredientItem, inputItemStack);
                 }
                 Map<String, String[]> substitutions = ConfigManager.CONFIG_FILE.getSubstitutions();
-                String itemKey = Registry.ITEM.getId(validIngredientItem).toString();
+                String itemKey = Registries.ITEM.getId(validIngredientItem).toString();
                 if (substitutions.containsKey(itemKey)) {
                     if (doesArrayContainItem(substitutions.get(itemKey), inputItemStack.getItem()))
                         if (checkIngredientNotOverused(validIngredientItem, INGREDIENT_ITEMS))
@@ -69,7 +69,7 @@ public class ShapelessRecipeMixin {
     }
 
     private static boolean doesArrayContainItem(String[] array, Item item) {
-        return Arrays.stream(array).toList().contains(Registry.ITEM.getId(item).toString());
+        return Arrays.stream(array).toList().contains(Registries.ITEM.getId(item).toString());
     }
 
     private static boolean checkIngredientNotOverused(Item validIngredientItem, HashMap<Item, Integer> INGREDIENT_ITEMS) {
